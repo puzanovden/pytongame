@@ -143,20 +143,26 @@ def check_loot_pickup():
             obj.alive = False
 
 def apply_loot(player, loot):
+    weapon = player.weapon
+
     if loot.defn.loot_type == "heal":
         player.hp = min(
             player.hp + loot.defn.value,
             player.defn.hp_max
         )
+        return  
+
     if loot.defn.loot_type == "buff_projectiles":
-        player.weapon.projectiles += 1
+        weapon.projectiles += 1
 
     elif loot.defn.loot_type == "buff_damage":
-        player.weapon.damage_mul += loot.defn.value
+        weapon.damage_mul += loot.defn.value
 
     elif loot.defn.loot_type == "buff_fire_rate":
-        player.weapon.fire_rate += 0.5
-        player.weapon.cooldown = 1.0 / player.weapon.fire_rate
+        weapon.fire_rate += loot.defn.value
+        weapon.cooldown = 1.0 / weapon.fire_rate
+
+    weapon.level += 1
 
 def delete_dead():
     global game_over, score
@@ -176,19 +182,18 @@ def delete_dead():
 def drop_loot(enemy):
     hp = enemy.defn.hp_max
 
-    drop_chance = min(0.2 + hp / 500, 0.9)
+    drop_chance = min(0 + hp / 500, 0.3)
     if random.random() > drop_chance:
         return
 
-    roll = random.random()
+    rn = random.random()
 
-    if roll < 0.21:
-        loot_def = buff_proj          # +1 projectile
-    elif roll < 0.06:
-        loot_def = buff_dmg           # +5% damage
-    elif roll < 0.11:
-        loot_def = buff_rate          # +5% fire rate
-
+    if rn < 0.02:
+        loot_def = buff_proj         
+    elif rn < 0.06:#0.06
+        loot_def = buff_dmg          
+    elif rn < 0.11:
+        loot_def = buff_rate         
     else:
         if hp < 100:
             loot_def = heal_small
@@ -199,44 +204,44 @@ def drop_loot(enemy):
 
     physics._objects.append(Loot(loot_def, enemy.x, enemy.y))
 
-def draw_hp_bar(surface, player):
+def draw_hp_bar(screen, player):
     if not player:
         return
 
     bar_w = 300
     bar_h = 20
-    x = (surface.get_width() - bar_w) // 2
-    y = surface.get_height() - bar_h - 10
+    x = (screen.get_width() - bar_w) // 2
+    y = screen.get_height() - bar_h - 10
 
     hp_frac = max(player.hp / player.defn.hp_max, 0)
 
-    pygame.draw.rect(surface, (60, 60, 60), (x, y, bar_w, bar_h))
+    pygame.draw.rect(screen, (60, 60, 60), (x, y, bar_w, bar_h))
     pygame.draw.rect(
-        surface,
+        screen,
         (200, 40, 40),
         (x, y, int(bar_w * hp_frac), bar_h)
     )
 
-def draw_score(surface):
+def draw_score(screen):
     _font = pygame.font.SysFont("consolas", 28, bold=True)
     text = _font.render(f"SCORE: {score}", True, (240, 240, 240))
-    surface.blit(text, (20, 20))
+    screen.blit(text, (20, 20))
 
-def draw_game_over(surface, print = True):
-    w, h = surface.get_size()
+def draw_game_over(screen, print = True):
+    w, h = screen.get_size()
 
     overlay = pygame.Surface((w, h))
     overlay.set_alpha(180)
     overlay.fill((0, 0, 0))
-    surface.blit(overlay, (0, 0))
+    screen.blit(overlay, (0, 0))
     
     if print:
         _font = pygame.font.SysFont("consolas", 28, bold=True)
         _font_big = pygame.font.SysFont("consolas", 56, bold=True)
         title = _font_big.render("YOU DIED", True, (220, 60, 60))
         score_text = _font.render(f"YOUR SCORE: {score}", True, (230, 230, 230))
-        surface.blit(title, title.get_rect(center=(w//2, h//2 - 40)))
-        surface.blit(score_text, score_text.get_rect(center=(w//2, h//2 + 10)))
+        screen.blit(title, title.get_rect(center=(w//2, h//2 - 40)))
+        screen.blit(score_text, score_text.get_rect(center=(w//2, h//2 + 10)))
 
 def restart_game():
     global game_over

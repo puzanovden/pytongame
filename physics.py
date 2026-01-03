@@ -91,15 +91,16 @@ def shoot(shooter):
     for a in angles:
         proj_def = weapon.ammo_def
 
+        damage = int(weapon.ammo_def.damage * weapon.damage_mul)
+
         bullet = Projectile(
-            proj_def,
+            weapon.ammo_def,
             shooter.x,
             shooter.y,
             base_angle + a,
-            shooter.team
-        )
+            shooter.team,
+            damage)
 
-        bullet.defn.damage = int(proj_def.damage * weapon.damage_mul)
 
         _objects.append(bullet)
     weapon.trigger()

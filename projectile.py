@@ -20,8 +20,9 @@ class ProjectileDef(GameObjectDef):
 
 
 class Projectile(GameObject):
-    def __init__(self, proj_def: ProjectileDef, x, y, angle, team):
+    def __init__(self, proj_def, x, y, angle, team, damage):
         super().__init__(proj_def, x, y, angle, team)
+        self.damage = damage
 
     def update(self, dt):
         rad = math.radians(self.angle)
