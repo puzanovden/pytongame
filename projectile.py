@@ -7,7 +7,8 @@ class ProjectileDef(GameObjectDef):
         sprite_count,
         diameter,
         speed,
-        damage
+        damage,
+        nd = False
     ):
         super().__init__(
             ObjectType.PROJECTILE,
@@ -17,6 +18,7 @@ class ProjectileDef(GameObjectDef):
         )
         self.speed = speed
         self.damage = damage
+        self.nd = nd
 
 
 class Projectile(GameObject):

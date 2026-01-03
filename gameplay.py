@@ -27,17 +27,21 @@ player = None
 
 def init_world():
 
-    global player
+    global player, score
     global heal_small,heal_mid,heal_big,buff_proj,buff_dmg,buff_rate
     
-
+    score = 0
     player_sprite = pygame.image.load("images/player.png").convert_alpha()
     enemy_sprite  = pygame.image.load("images/enem1.png").convert_alpha()
     pistol_sprite  = pygame.image.load("images/weap1.png").convert_alpha()
     shotgun_sprite  = pygame.image.load("images/weap2.png").convert_alpha()
     automat_sprite  = pygame.image.load("images/weap3.png").convert_alpha()
+    roket_sprite  = pygame.image.load("images/weap4.png").convert_alpha()
+    lazer_sprite  = pygame.image.load("images/weap5.png").convert_alpha()
     loot_sprite   = pygame.image.load("images/55.png").convert_alpha()
     bullet_sprite   = pygame.image.load("images/555.png").convert_alpha()
+    roketbul_sprite   = pygame.image.load("images/rb.png").convert_alpha()
+    lazerbul_sprite   = pygame.image.load("images/lb.png").convert_alpha()
     heal_sprite   = pygame.image.load("images/heal_sprite.png").convert_alpha()
 
 
@@ -54,19 +58,25 @@ def init_world():
     loot_def   = LootDef(loot_sprite,   1, 30, loot_type="medkit", value=25)
 
     pisbullet_def = ProjectileDef(sprite=bullet_sprite,sprite_count=1,diameter=10,speed=700,damage=35)
-    pistol = Weapon(sprite=pistol_sprite,ammo_def=pisbullet_def,fire_rate=7,spread_mul=1.0)
+    pistol = Weapon(sprite=pistol_sprite,ammo_def=pisbullet_def,fire_rate=6,spread_mul=1.0)
 
     shobullet_def = ProjectileDef(sprite=bullet_sprite,sprite_count=1,diameter=8,speed=600,damage=25)
-    shotgun = Weapon(sprite=shotgun_sprite,ammo_def=shobullet_def,fire_rate=5,spread_mul=2.7,projectiles=3)
+    shotgun = Weapon(sprite=shotgun_sprite,ammo_def=shobullet_def,fire_rate=4,spread_mul=2.7,projectiles=3)
 
     autbullet_def = ProjectileDef(sprite=bullet_sprite,sprite_count=1,diameter=8,speed=800,damage=8)
-    automat = Weapon(sprite=automat_sprite,ammo_def=autbullet_def,fire_rate=25,spread_mul=2.7,projectiles=1)
+    automat = Weapon(sprite=automat_sprite,ammo_def=autbullet_def,fire_rate=15,spread_mul=2.7,projectiles=1)
+
+    roketbullet_def = ProjectileDef(sprite=roketbul_sprite,sprite_count=1,diameter=20,speed=500,damage=80)
+    roket = Weapon(sprite=roket_sprite,ammo_def=roketbullet_def,fire_rate=2,spread_mul=2.7,projectiles=1)
+
+    lazerbullet_def = ProjectileDef(sprite=lazerbul_sprite,sprite_count=1,diameter=15,speed=900,damage=5,nd=True)
+    lazer = Weapon(sprite=lazer_sprite,ammo_def=lazerbullet_def,fire_rate=5,spread_mul=2.7,projectiles=1)
 
     player = Character(
         player_def,
         600, 400,
         is_player=True,
-        weapons=[pistol,shotgun,automat]
+        weapons=[pistol,shotgun,automat,roket,lazer]
         )
 
     physics.set_objects([

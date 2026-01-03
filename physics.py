@@ -130,6 +130,7 @@ def check_projectile_hits():
             if dist <= r1 + r2:
                 other.take_damage(obj.defn.damage)
                 obj.alive = False
+                if obj.defn.nd: obj.alive = True #laser
                 break
 
 def is_outside_screen(obj, w, h):
